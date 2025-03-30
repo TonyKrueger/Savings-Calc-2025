@@ -23,12 +23,12 @@ test('calculator page loads and functions correctly', async ({ page }) => {
   await expect(page.getByLabel(/Savings Mode/)).toBeVisible();
   
   // Check heat source selector
-  const heatSourceSelect = page.getByRole('combobox', { name: /Add Heat Source/i });
+  const heatSourceSelect = page.getByRole('combobox', { name: /What else are you heating?/i });
   await expect(heatSourceSelect).toBeVisible();
   
-  // Check default heat sources
-  await expect(page.getByText('Select a fuel type')).toBeVisible();
-  await expect(page.getByText('Electricity')).toBeVisible();
+  // Check for home and water heater sections that are added by default
+  await expect(page.getByText(/home/i, { exact: false })).toBeVisible();
+  await expect(page.getByText(/water heater/i, { exact: false })).toBeVisible();
   
   // Test mode switch
   const modeSwitch = page.getByRole('switch', { name: /Savings Mode/i });

@@ -19,6 +19,7 @@ export type HeatSource = {
   costPerUnit: number;
   quantity: number;
   waterHeaterDuration: number | null;
+  measurementType: PerType;
 };
 
 export const enum FuelTypes {

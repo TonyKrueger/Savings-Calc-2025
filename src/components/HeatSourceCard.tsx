@@ -25,14 +25,25 @@ export function HeatSourceCard({
       return "Click to enter type of fuel, units and cost per unit";
     }
     if (heatSource.type === 'water heater') {
-      return "Using estimates based on a family of 5";
+      const duration = heatSource.waterHeaterDuration || 6;
+      return `${heatSource.fuelType.name} ${heatSource.quantity} ${heatSource.fuelType.units} annually @ ${formatCurrency(heatSource.costPerUnit)} per ${heatSource.fuelType.specificUnit} for ${duration} months`;
     }
-    return `${heatSource.fuelType.name}, ${heatSource.quantity} ${heatSource.fuelType.units} at ${formatCurrency(heatSource.costPerUnit)} per ${heatSource.fuelType.specificUnit}`;
+    // For other heat sources, use the saved measurement type
+    const measurementType = heatSource.measurementType?.startsWith('annual') ? 'Annual' : 'Monthly';
+    return `${heatSource.fuelType.name}, ${heatSource.quantity} ${measurementType} ${heatSource.fuelType.units} at ${formatCurrency(heatSource.costPerUnit)} per ${heatSource.fuelType.specificUnit}`;
   };
 
   const calculateAmount = () => {
     if (heatSource.fuelType.type === 'empty') return 0;
-    return heatSource.quantity * heatSource.costPerUnit;
+    
+    // For water heaters, adjust annual cost based on duration
+    if (heatSource.type === 'water heater' && heatSource.waterHeaterDuration) {
+      return heatSource.quantity * heatSource.costPerUnit * (heatSource.waterHeaterDuration / 12);
+    }
+    
+    // For other sources, convert to annual if needed
+    const isMonthly = heatSource.measurementType?.startsWith('monthly');
+    return heatSource.quantity * heatSource.costPerUnit * (isMonthly ? 12 : 1);
   };
 
   return (

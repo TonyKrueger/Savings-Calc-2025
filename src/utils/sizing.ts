@@ -53,7 +53,7 @@ export const calculateSizing = (
 
   // For water heaters, use the water heater duration instead of standard conversion
   if (heatSource.type === 'water heater' && heatSource.waterHeaterDuration) {
-    const durationInMonths = heatSource.waterHeaterDuration / 30; // Convert minutes to months
+    const durationInMonths = heatSource.waterHeaterDuration; // Duration is already in months
     
     if (perType.startsWith('monthly')) {
       sizing = heatSource.fuelType.multiplier * (quantity * (12 / durationInMonths) / MONTHLY_TO_ANNUAL_SIZING);

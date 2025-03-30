@@ -17,6 +17,8 @@ interface CalculatorContextType {
   setEditingSource: (source: { index: number; source: HeatSource } | null) => void;
   sizingValues: number[];
   totalSizing: number;
+  reset: () => void;
+  hasChanges: boolean;
 }
 
 const CalculatorContext = createContext<CalculatorContextType | undefined>(undefined);
@@ -31,6 +33,7 @@ export function CalculatorProvider({ children }: CalculatorProviderProps) {
   const [editingSource, setEditingSource] = useState<{ index: number; source: HeatSource } | null>(null);
   const [sizingValues, setSizingValues] = useState<number[]>([]);
   const [totalSizing, setTotalSizing] = useState<number>(0);
+  const [hasChanges, setHasChanges] = useState<boolean>(false);
 
   // Update sizing values whenever heat sources change
   useEffect(() => {
@@ -41,7 +44,20 @@ export function CalculatorProvider({ children }: CalculatorProviderProps) {
     
     const newTotalSizing = calculateTotalSizing(heatSources, 'annualUnits');
     setTotalSizing(newTotalSizing);
+
+    // Check if current state differs from default state
+    const isDefault = JSON.stringify(heatSources) === JSON.stringify(DEFAULT_HEAT_SOURCES);
+    setHasChanges(!isDefault);
   }, [heatSources]);
+
+  const reset = () => {
+    setHeatSources(DEFAULT_HEAT_SOURCES);
+    setMode('savings');
+    setEditingSource(null);
+    setSizingValues([]);
+    setTotalSizing(0);
+    setHasChanges(false);
+  };
 
   const addHeatSource = (heatSource: HeatSource) => {
     setHeatSources((prev) => [...prev, heatSource]);
@@ -77,6 +93,8 @@ export function CalculatorProvider({ children }: CalculatorProviderProps) {
         setEditingSource,
         sizingValues,
         totalSizing,
+        reset,
+        hasChanges,
       }}
     >
       {children}

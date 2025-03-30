@@ -209,12 +209,14 @@ export const DEFAULT_HEAT_SOURCES: HeatSource[] = [
     costPerUnit: 0,
     quantity: 0,
     waterHeaterDuration: null,
+    measurementType: "monthlyUnits"
   },
   {
     type: "water heater",
     fuelType: ELECTRICITY,
     costPerUnit: 0.18,
     quantity: 4531.50,
-    waterHeaterDuration: 180, // 6 months in minutes
+    waterHeaterDuration: 6, // 6 months
+    measurementType: "annualUnits"
   },
 ]; 
