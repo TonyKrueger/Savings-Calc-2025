@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from './ui/select';
 import { HeatSource, HeatSourceType } from '../types/calculator';
+import { Button } from './ui/button';
 
 export function Calculator() {
   const { mode, setMode, addHeatSource } = useCalculator();
@@ -28,45 +29,56 @@ export function Calculator() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Savings Calculator 2025</h1>
-      <p className="mb-4">
-        Use this calculator to estimate your potential savings or determine the
-        right size for your heat pump system.
-      </p>
-      <p className="mb-8">
-        Enter your current heating costs and usage to see how much you could save
-        with a heat pump system, or input your desired heating requirements to get
-        sizing recommendations.
-      </p>
+      <div className="max-w-2xl mx-auto mb-8">
+        <h2 className="text-xl font-semibold mb-4">How to use the calculator</h2>
+        <p className="mb-4">Enter your information in the boxes below. When you are done, the calculator shows you:</p>
+        <ul className="list-disc pl-6 mb-4 space-y-2">
+          <li>The approximate amount of money you can save annually PLUS a graph showing the savings add up over time, and</li>
+          <li>Recommended furnaces based on your heating needs</li>
+        </ul>
 
-      <div className="flex items-center space-x-4 mb-8">
-        <Switch
-          id="mode"
-          checked={mode === 'sizing'}
-          onCheckedChange={(checked) => setMode(checked ? 'sizing' : 'savings')}
-        />
-        <Label htmlFor="mode">
-          {mode === 'sizing' ? 'Sizing Mode' : 'Savings Mode'}
-        </Label>
+        <h2 className="text-xl font-semibold mb-4">What to do with your results</h2>
+        <p className="mb-8">Click the PRINT YOUR SAVINGS button and print a copy of your results. Take this with you when you talk to your authorized Central Boiler dealer to help identify which furnace best fits your heating needs.</p>
       </div>
 
-      <div className="mb-8">
-        <Label htmlFor="heat-source">Add Heat Source</Label>
-        <Select onValueChange={handleAddHeatSource}>
-          <SelectTrigger id="heat-source" className="w-[280px]">
-            <SelectValue placeholder="Select a heat source type" />
-          </SelectTrigger>
-          <SelectContent>
-            {AVAILABLE_HEAT_SOURCE_TYPES.map((type) => (
-              <SelectItem key={type} value={type}>
-                {type.charAt(0).toUpperCase() + type.slice(1)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+      <div className="max-w-2xl mx-auto">
+        <div className="flex items-center justify-between mb-8 bg-gray-100 p-4 rounded-lg">
+          <div className="flex items-center space-x-4">
+            <Switch
+              id="mode"
+              checked={mode === 'sizing'}
+              onCheckedChange={(checked) => setMode(checked ? 'sizing' : 'savings')}
+            />
+            <Label htmlFor="mode" className="text-lg">
+              {mode === 'sizing' ? 'Sizing Mode' : 'Savings Mode'}
+            </Label>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="heat-source" className="sr-only">Add Heat Source</Label>
+            <Select onValueChange={handleAddHeatSource}>
+              <SelectTrigger id="heat-source" className="w-[200px]">
+                <SelectValue placeholder="What else are you heating?" />
+              </SelectTrigger>
+              <SelectContent>
+                {AVAILABLE_HEAT_SOURCE_TYPES.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-      <HeatSourceList />
+        <HeatSourceList />
+
+        <div className="flex justify-center mt-8">
+          <Button variant="outline" size="lg">
+            Print Your Savings
+          </Button>
+        </div>
+      </div>
     </div>
   );
 } 
