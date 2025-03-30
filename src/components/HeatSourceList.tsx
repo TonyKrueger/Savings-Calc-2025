@@ -1,18 +1,19 @@
-import { useState } from 'react';
 import { useCalculator } from '../contexts/CalculatorContext';
 import { Button } from './ui/button';
 import { formatCurrency } from '../utils/format';
 import { Settings2 } from 'lucide-react';
 import { EditHeatSourceDialog } from './EditHeatSourceDialog';
-import { HeatSource } from '../types/calculator';
+import { HeatSource, FuelTypes } from '../types/calculator';
+import { HeatSourceCard } from './HeatSourceCard';
 
 export function HeatSourceList() {
-  const { heatSources, mode, removeHeatSource, updateHeatSource } = useCalculator();
-  const [editingSource, setEditingSource] = useState<{ index: number; source: HeatSource } | null>(null);
-
-  const handleEdit = (index: number, source: HeatSource) => {
-    setEditingSource({ index, source });
-  };
+  const { 
+    heatSources, 
+    editHeatSource, 
+    updateHeatSource, 
+    editingSource, 
+    setEditingSource 
+  } = useCalculator();
 
   const handleSave = (updatedSource: HeatSource) => {
     if (editingSource) {
@@ -21,63 +22,35 @@ export function HeatSourceList() {
     }
   };
 
+  const getHeatSourceDetails = (index: number) => {
+    const source = heatSources[index];
+    if (source.fuelType.type === FuelTypes.empty) {
+      return "Click to enter type of fuel, units and cost per unit";
+    }
+    if (source.type === 'water heater') {
+      return "Using estimates based on a family of 5";
+    }
+    return `${source.fuelType.name}, ${source.quantity} units at $${source.costPerUnit} per unit`;
+  };
+
+  const calculateAmount = (index: number) => {
+    const source = heatSources[index];
+    if (source.fuelType.type === FuelTypes.empty) return 0;
+    return source.quantity * source.costPerUnit;
+  };
+
   return (
     <>
-      <div className="flex flex-col space-y-4 max-w-2xl mx-auto">
+      <div className="space-y-3">
         {heatSources.map((source, index) => (
-          <div key={index} className="bg-white rounded-lg shadow p-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">
-                {source.type.charAt(0).toUpperCase() + source.type.slice(1)}
-              </h3>
-              <div className="flex space-x-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                  onClick={() => handleEdit(index, source)}
-                >
-                  <Settings2 className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeHeatSource(index)}
-                >
-                  Remove
-                </Button>
-              </div>
-            </div>
-            
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Fuel Type:</span>
-                <span>{source.fuelType.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Units:</span>
-                <span>{source.quantity} {source.fuelType.units}</span>
-              </div>
-              {mode === "savings" && (
-                <>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Cost per Unit:</span>
-                    <span>{formatCurrency(source.costPerUnit)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Annual Cost:</span>
-                    <span>{formatCurrency(source.costPerUnit * source.quantity * 12)}</span>
-                  </div>
-                </>
-              )}
-              {source.type === "water heater" && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Duration:</span>
-                  <span>{source.waterHeaterDuration} minutes</span>
-                </div>
-              )}
-            </div>
-          </div>
+          <HeatSourceCard
+            key={index}
+            name={source.type.charAt(0).toUpperCase() + source.type.slice(1)}
+            details={getHeatSourceDetails(index)}
+            amount={calculateAmount(index)}
+            onEdit={() => editHeatSource(index)}
+            type={source.type}
+          />
         ))}
       </div>
 

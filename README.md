@@ -1,6 +1,6 @@
 # Savings Calculator 2025
 
-A modern savings calculator built with React, TypeScript, and Tailwind CSS. This application helps users plan their financial future by providing advanced savings calculations and visualizations.
+A modern savings calculator built with React, TypeScript, and Tailwind CSS. This application helps users see their savings when using a Central Boiler Furnace.
 
 ## Features (Coming Soon)
 
@@ -47,12 +47,4 @@ npm test
 
 # E2E tests
 npm run test:e2e
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-MIT 
+``` 

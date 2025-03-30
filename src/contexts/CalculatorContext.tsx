@@ -11,6 +11,9 @@ interface CalculatorContextType {
   addHeatSource: (heatSource: HeatSource) => void;
   removeHeatSource: (index: number) => void;
   updateHeatSource: (index: number, heatSource: HeatSource) => void;
+  editHeatSource: (index: number) => void;
+  editingSource: { index: number; source: HeatSource } | null;
+  setEditingSource: (source: { index: number; source: HeatSource } | null) => void;
 }
 
 const CalculatorContext = createContext<CalculatorContextType | undefined>(undefined);
@@ -22,6 +25,7 @@ interface CalculatorProviderProps {
 export function CalculatorProvider({ children }: CalculatorProviderProps) {
   const [heatSources, setHeatSources] = useState<HeatSource[]>(DEFAULT_HEAT_SOURCES);
   const [mode, setMode] = useState<Mode>('savings');
+  const [editingSource, setEditingSource] = useState<{ index: number; source: HeatSource } | null>(null);
 
   const addHeatSource = (heatSource: HeatSource) => {
     setHeatSources((prev) => [...prev, heatSource]);
@@ -39,6 +43,10 @@ export function CalculatorProvider({ children }: CalculatorProviderProps) {
     });
   };
 
+  const editHeatSource = (index: number) => {
+    setEditingSource({ index, source: heatSources[index] });
+  };
+
   return (
     <CalculatorContext.Provider 
       value={{ 
@@ -48,6 +56,9 @@ export function CalculatorProvider({ children }: CalculatorProviderProps) {
         addHeatSource, 
         removeHeatSource, 
         updateHeatSource,
+        editHeatSource,
+        editingSource,
+        setEditingSource,
       }}
     >
       {children}

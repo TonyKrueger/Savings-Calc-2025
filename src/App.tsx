@@ -5,11 +5,13 @@ import { Header } from './components/Header'
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-white">
       <Header />
-      <CalculatorProvider>
-        <Calculator />
-      </CalculatorProvider>
+      <main className="container mx-auto px-4 py-8">
+        <CalculatorProvider>
+          <Calculator />
+        </CalculatorProvider>
+      </main>
     </div>
   );
 }
