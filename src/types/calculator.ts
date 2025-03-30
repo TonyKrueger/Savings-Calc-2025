@@ -28,6 +28,10 @@ export const enum FuelTypes {
   naturalGasTherms = 'naturalGasTherms',
   electricity = 'electricity',
   wood = 'wood',
+  woodPelletsBag = 'woodPelletsBag',
+  woodPelletsTon = 'woodPelletsTon',
+  cornBushel = 'cornBushel',
+  cornTon = 'cornTon',
   empty = 'empty'
 }
 

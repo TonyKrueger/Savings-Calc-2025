@@ -54,7 +54,11 @@ export function EditHeatSourceDialog({
               onValueChange={(value) => {
                 const fuelType = AVAILABLE_FUEL_TYPES.find((fuel) => fuel.type === value);
                 if (fuelType) {
-                  setEditedSource({ ...editedSource, fuelType });
+                  setEditedSource({ 
+                    ...editedSource, 
+                    fuelType,
+                    costPerUnit: fuelType.price // Set the default price from the fuel type
+                  });
                 }
               }}
             >
@@ -72,7 +76,7 @@ export function EditHeatSourceDialog({
           </div>
 
           <div className="grid gap-2">
-            <Label htmlFor="quantity">How many kilowatts?</Label>
+            <Label htmlFor="quantity">How many {editedSource.fuelType.units}?</Label>
             <Input
               id="quantity"
               type="number"
