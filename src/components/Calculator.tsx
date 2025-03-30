@@ -14,12 +14,20 @@ import {
 } from './ui/select';
 import { HeatSource, HeatSourceType } from '../types/calculator';
 import { Button } from './ui/button';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { RotateCcw } from 'lucide-react';
+import { calculateAnnualSavings } from '../utils/savings';
+import { SavingsBanner } from './SavingsBanner';
+import { SavingsChart } from './SavingsChart';
 
 export function Calculator() {
-  const { mode, setMode, addHeatSource, totalSizing, reset, hasChanges } = useCalculator();
+  const { mode, setMode, addHeatSource, totalSizing, reset, hasChanges, heatSources } = useCalculator();
   const [selectedHeatSource, setSelectedHeatSource] = useState<string>("");
+
+  // Calculate annual savings from heat sources
+  const annualSavings = useMemo(() => {
+    return calculateAnnualSavings(heatSources);
+  }, [heatSources]);
 
   const handleAddHeatSource = (type: string) => {
     const newHeatSource: HeatSource = {
@@ -96,7 +104,16 @@ export function Calculator() {
           </div>
         </div>
 
-        {mode === 'sizing' && <SizingTable totalSizing={totalSizing} />}
+        {mode === 'sizing' ? (
+          <SizingTable totalSizing={totalSizing} />
+        ) : (
+          hasChanges && annualSavings > 0 && (
+            <>
+              <SavingsBanner annualSavings={annualSavings} />
+              <SavingsChart annualSavings={annualSavings} />
+            </>
+          )
+        )}
 
         {hasChanges && (
           <div className="flex justify-center mt-6">
