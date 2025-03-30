@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
-import { HeatSource } from '../types/calculator';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import { HeatSource, PerType } from '../types/calculator';
 import { DEFAULT_HEAT_SOURCES } from '../config/calculator';
+import { calculateSizing, calculateTotalSizing } from '../utils/sizing';
 
 type Mode = 'savings' | 'sizing';
 
@@ -14,6 +15,8 @@ interface CalculatorContextType {
   editHeatSource: (index: number) => void;
   editingSource: { index: number; source: HeatSource } | null;
   setEditingSource: (source: { index: number; source: HeatSource } | null) => void;
+  sizingValues: number[];
+  totalSizing: number;
 }
 
 const CalculatorContext = createContext<CalculatorContextType | undefined>(undefined);
@@ -26,6 +29,19 @@ export function CalculatorProvider({ children }: CalculatorProviderProps) {
   const [heatSources, setHeatSources] = useState<HeatSource[]>(DEFAULT_HEAT_SOURCES);
   const [mode, setMode] = useState<Mode>('savings');
   const [editingSource, setEditingSource] = useState<{ index: number; source: HeatSource } | null>(null);
+  const [sizingValues, setSizingValues] = useState<number[]>([]);
+  const [totalSizing, setTotalSizing] = useState<number>(0);
+
+  // Update sizing values whenever heat sources change
+  useEffect(() => {
+    const newSizingValues = heatSources.map(source => 
+      calculateSizing(source, 'annualUnits')
+    );
+    setSizingValues(newSizingValues);
+    
+    const newTotalSizing = calculateTotalSizing(heatSources, 'annualUnits');
+    setTotalSizing(newTotalSizing);
+  }, [heatSources]);
 
   const addHeatSource = (heatSource: HeatSource) => {
     setHeatSources((prev) => [...prev, heatSource]);
@@ -59,6 +75,8 @@ export function CalculatorProvider({ children }: CalculatorProviderProps) {
         editHeatSource,
         editingSource,
         setEditingSource,
+        sizingValues,
+        totalSizing,
       }}
     >
       {children}

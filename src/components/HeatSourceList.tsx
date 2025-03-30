@@ -12,7 +12,8 @@ export function HeatSourceList() {
     editHeatSource, 
     updateHeatSource, 
     editingSource, 
-    setEditingSource 
+    setEditingSource,
+    removeHeatSource 
   } = useCalculator();
 
   const handleSave = (updatedSource: HeatSource) => {
@@ -45,11 +46,10 @@ export function HeatSourceList() {
         {heatSources.map((source, index) => (
           <HeatSourceCard
             key={index}
-            name={source.type.charAt(0).toUpperCase() + source.type.slice(1)}
-            details={getHeatSourceDetails(index)}
-            amount={calculateAmount(index)}
+            heatSource={source}
+            index={index}
             onEdit={() => editHeatSource(index)}
-            type={source.type}
+            onDelete={() => removeHeatSource(index)}
           />
         ))}
       </div>

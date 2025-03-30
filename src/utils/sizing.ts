@@ -4,14 +4,9 @@ import {
   MONTHLY_TO_ANNUAL, 
   ANNUAL_TO_MONTHLY_SIZING, 
   MONTHLY_TO_ANNUAL_SIZING,
-  SIZING_RECOMMENDATIONS 
+  SIZING_RECOMMENDATIONS,
+  FurnaceRecommendation 
 } from '../config/calculator';
-
-type SizingRecommendation = {
-  furnaces: string;
-  low: number;
-  high: number;
-};
 
 /**
  * Calculates the quantity of fuel used based on cost and cost per unit
@@ -25,8 +20,9 @@ const calculateQuantity = (cost: number, costPerUnit: number): number => {
  */
 export const getRecommendedFurnaces = (sizing: number): string[] => {
   return SIZING_RECOMMENDATIONS
-    .filter((rec: SizingRecommendation) => sizing >= rec.low && sizing <= rec.high)
-    .map((rec: SizingRecommendation) => rec.furnaces);
+    .filter((rec: FurnaceRecommendation) => sizing >= rec.low && sizing <= rec.high)
+    .map((rec: FurnaceRecommendation) => rec.furnaces)
+    .flat();
 };
 
 /**

@@ -6,12 +6,52 @@ export const MONTHLY_TO_ANNUAL = 5;
 export const ANNUAL_TO_MONTHLY_SIZING = 4.5;
 export const MONTHLY_TO_ANNUAL_SIZING = 4.5;
 
+export interface FurnaceRecommendation {
+  furnaces: string[];
+  low: number;
+  high: number;
+  productUrls: Record<string, string>;
+}
+
 // Sizing recommendations
-export const SIZING_RECOMMENDATIONS = [
-  { furnaces: "CL-4030, Classic Edge 360", low: 0, high: 170 },
-  { furnaces: "CL-5036, Classic Edge 560", low: 0, high: 395 },
-  { furnaces: "CL 6048, Classic Edge 760", low: 250, high: 710 },
-  { furnaces: "CL 7260, Pallet Burner, Classic Edge 960", low: 500, high: 1800 }
+export const SIZING_RECOMMENDATIONS: FurnaceRecommendation[] = [
+  {
+    furnaces: ['Classic Edge 360', 'CL 4030'],
+    low: 0,
+    high: 170,
+    productUrls: {
+      'Classic Edge 360': 'https://example.com/classic-edge-360',
+      'CL 4030': 'https://example.com/cl-4030'
+    }
+  },
+  {
+    furnaces: ['Classic Edge 560', 'CL 5036'],
+    low: 0,
+    high: 395,
+    productUrls: {
+      'Classic Edge 560': 'https://example.com/classic-edge-560',
+      'CL 5036': 'https://example.com/cl-5036'
+    }
+  },
+  {
+    furnaces: ['Classic Edge 760', 'CL 6048'],
+    low: 250,
+    high: 710,
+    productUrls: {
+      'Classic Edge 760': 'https://example.com/classic-edge-760',
+      'CL 6048': 'https://example.com/cl-6048'
+    }
+  },
+  {
+    furnaces: ['Classic Edge 960', 'CL 7260', 'Pallet Burner'],
+    low: 500,
+    high: 1800,
+    productUrls: {
+      'Classic Edge 960': 'https://example.com/classic-edge-960',
+      'CL 7260': 'https://example.com/cl-7260',
+      'Pallet Burner': 'https://example.com/pallet-burner'
+    }
+  }
 ];
 
 export const FUEL_OIL: FuelType = {
